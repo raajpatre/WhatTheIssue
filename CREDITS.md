@@ -19,6 +19,8 @@ Every library, API, dataset, template, and AI tool used across **myOpenSource** 
 - **[APScheduler](https://apscheduler.readthedocs.io/)** — In-process cron and interval task scheduler (MIT License)
 - **[GitHub REST API v3](https://docs.github.com/en/rest)** — Public read-only repository, issue, and README endpoints (GitHub Terms of Service)
 - **[Telegram Bot API](https://core.telegram.org/bots/api)** — Push notification delivery channel (Telegram API Terms)
+- **[httpx](https://www.python-httpx.org/)** (`>=0.25.0`) — HTTP client for Python with sync and async APIs (BSD License)
+- **[pytest](https://docs.pytest.org/)** (`>=8.0.0`) — Robust testing framework for Python (MIT License)
 
 ### AI Models & Providers
 - **[Google Gemini 1.5 Flash](https://ai.google.dev/)** — Fast, multimodal reasoning LLM for issue summarization and beginner onboarding
@@ -26,13 +28,3 @@ Every library, API, dataset, template, and AI tool used across **myOpenSource** 
 
 ### Datasets & Samples
 - **`fixtures/sample_issues.json`** — Handcrafted test dataset simulating realistic open-source issue states (`safe`, `claimed`, `stale`, `unclear`) for offline development
-# Credits
-
-Every library, API, dataset, template and AI tool used in this project is credited here (one line each).
-
-## Dependencies & Tools
-- pydantic: Data validation and settings management using Python type annotations.
-- pytest: Testing framework for Python.
-- httpx: HTTP client for Python with sync and async APIs.
-- Google Gemini API: Large language model provider for issue insights and explanation.
-- Ollama: Local open-weights model inference runner.
