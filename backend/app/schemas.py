@@ -1,6 +1,3 @@
-# NEEDS-FROM-PART-A: backend/app/schemas.py is owned by Part A (copy from AGENTS.md verbatim).
-# Providing here per AGENTS.md contract so Part B can run independently without waiting.
-
 from typing import Literal, Optional
 from pydantic import BaseModel
 

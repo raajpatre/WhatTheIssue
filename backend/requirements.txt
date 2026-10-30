@@ -1,4 +1,10 @@
-# backend/requirements.txt (shared, append-only)
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+sqlalchemy
+python-dotenv
+pytest
 pydantic>=2.0.0
 httpx>=0.25.0
 pytest>=8.0.0

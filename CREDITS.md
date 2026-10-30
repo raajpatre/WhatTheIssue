@@ -16,15 +16,18 @@ Every library, API, dataset, template, and AI tool used across **myOpenSource** 
 - **[Pydantic](https://docs.pydantic.dev/)** — Data validation and schema parsing (MIT License)
 - **[SQLAlchemy](https://www.sqlalchemy.org/)** — Python SQL toolkit and Object Relational Mapper (MIT License)
 - **[Uvicorn](https://www.uvicorn.org/)** — ASGI web server implementation (BSD License)
+- **[python-dotenv](https://github.com/theskumar/python-dotenv)** — Load environment variables from `.env` (BSD License)
 - **[APScheduler](https://apscheduler.readthedocs.io/)** — In-process cron and interval task scheduler (MIT License)
 - **[GitHub REST API v3](https://docs.github.com/en/rest)** — Public read-only repository, issue, and README endpoints (GitHub Terms of Service)
 - **[Telegram Bot API](https://core.telegram.org/bots/api)** — Push notification delivery channel (Telegram API Terms)
 - **[httpx](https://www.python-httpx.org/)** (`>=0.25.0`) — HTTP client for Python with sync and async APIs (BSD License)
 - **[pytest](https://docs.pytest.org/)** (`>=8.0.0`) — Robust testing framework for Python (MIT License)
+- **[Render](https://render.com/)** — Backend hosting target (free web service; check current idle/hour limits)
 
 ### AI Models & Providers
 - **[Google Gemini 1.5 Flash](https://ai.google.dev/)** — Fast, multimodal reasoning LLM for issue summarization and beginner onboarding
 - **[Ollama](https://ollama.com/)** — Local model runner for private, offline LLM inference
+- **[Cursor](https://cursor.com/)** — AI coding agent used to implement the backend spine
 
 ### Datasets & Samples
 - **`fixtures/sample_issues.json`** — Handcrafted test dataset simulating realistic open-source issue states (`safe`, `claimed`, `stale`, `unclear`) for offline development

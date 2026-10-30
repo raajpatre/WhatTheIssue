@@ -1,0 +1,23 @@
+# Deploy config for the Part A FastAPI backend.
+# VERIFY: https://render.com/docs/free and https://render.com/docs/web-services
+# Render free web services sleep after idle (~15 min) and have a monthly hour cap.
+# Set secrets in the Render dashboard — never commit them.
+# ENABLE_SCHEDULER=1 and ENABLE_TELEGRAM_BOT=1 ONLY on an always-on instance
+# (two processes long-polling one Telegram token cause 409 errors).
+
+services:
+  - type: web
+    name: myopensource-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./myopensource.db
+      - key: ENABLE_SCHEDULER
+        value: "0"
+      - key: ENABLE_TELEGRAM_BOT
+        value: "0"
+      - key: GITHUB_TOKEN
+        sync: false
