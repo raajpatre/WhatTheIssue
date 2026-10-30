@@ -80,24 +80,42 @@ Repo: {repo}
 """
 
 
-def build_explain_prompt(issue: Issue) -> str:
-    # Truncate body to 4,000 chars
-    body_truncated = (issue.body or "")[:4000]
+def sanitize_untrusted(text: str, delimiter_tag: str) -> str:
+    """
+    Sanitize untrusted text to prevent escaping delimiter boundaries.
+    Replaces occurrences of closing tag with a neutral representation.
+    """
+    if not text:
+        return ""
+    closing_tag = f"</{delimiter_tag}>"
+    opening_tag = f"<{delimiter_tag}>"
+    # Neutralize closing and opening delimiter tags inside untrusted content
+    sanitized = text.replace(closing_tag, f"[escaped-{delimiter_tag}]")
+    sanitized = sanitized.replace(opening_tag, f"[escaped-{delimiter_tag}]")
+    return sanitized
 
-    # At most 3 recent comments (truncate each to 500 chars)
+
+def build_explain_prompt(issue: Issue) -> str:
+    # Truncate body to 4,000 chars and sanitize
+    raw_body = sanitize_untrusted(issue.body or "", "untrusted_issue")
+    body_truncated = raw_body[:4000]
+
+    # At most 3 recent comments (truncate each to 500 chars and sanitize)
     recent_comments = issue.comments[-3:] if issue.comments else []
     comment_lines = []
     for c in recent_comments:
-        author = c.author
+        author = sanitize_untrusted(c.author, "untrusted_issue")
         assoc = c.author_association or "NONE"
-        c_body = (c.body or "")[:500]
+        c_body = sanitize_untrusted(c.body or "", "untrusted_issue")[:500]
         comment_lines.append(f"[{assoc}] @{author}: {c_body}")
     comments_text = "\n".join(comment_lines) if comment_lines else "No comments."
 
-    labels_text = ", ".join(issue.labels) if issue.labels else "None"
+    title_sanitized = sanitize_untrusted(issue.title, "untrusted_issue")
+    labels_sanitized = [sanitize_untrusted(lbl, "untrusted_issue") for lbl in issue.labels]
+    labels_text = ", ".join(labels_sanitized) if labels_sanitized else "None"
 
     return PROMPT_EXPLAIN_ISSUE.format(
-        title=issue.title,
+        title=title_sanitized,
         labels=labels_text,
         body=body_truncated,
         comments=comments_text,
@@ -105,8 +123,10 @@ def build_explain_prompt(issue: Issue) -> str:
 
 
 def build_readme_prompt(repo: str, readme: str) -> str:
-    readme_truncated = (readme or "")[:8000]
+    sanitized_readme = sanitize_untrusted(readme or "", "untrusted_readme")
+    readme_truncated = sanitized_readme[:8000]
     return PROMPT_SUGGEST_README.format(
         repo=repo,
         readme=readme_truncated,
     )
+

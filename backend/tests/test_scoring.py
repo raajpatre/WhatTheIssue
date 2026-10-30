@@ -204,3 +204,64 @@ def test_rank_ordering(sample_issues, monkeypatch):
     ranked = rank(sample_issues)
     statuses = [s.status for s in ranked]
     assert statuses == ["safe", "unclear", "stale", "claimed"]
+
+
+def test_malformed_datetime_resilience(monkeypatch):
+    """
+    Security & edge-case: If GitHub API returns corrupted or non-ISO dates,
+    the scoring engine must never crash or throw unhandled exceptions.
+    """
+    monkeypatch.setattr("app.scoring.engine.get_current_time", lambda: MOCK_NOW)
+    issue = Issue(
+        id=206,
+        repo="test/repo",
+        number=6,
+        title="Corrupted date strings",
+        body="This is a test issue with corrupted date format strings.",
+        url="https://github.com/test/repo/issues/6",
+        labels=["good first issue"],
+        assignees=[],
+        comments_count=1,
+        comments=[
+            Comment(
+                author="user",
+                body="I'll take this!",
+                created_at="NOT-A-DATE",
+                author_association="NONE",
+            )
+        ],
+        linked_pr_open=False,
+        created_at="INVALID-CREATED-DATE",
+        updated_at="MALFORMED-UPDATED-DATE",
+    )
+    scored = score_issue(issue)
+    # The comment has claim phrase with unparseable date -> fallback assumes recent -> claimed
+    assert scored.status == "claimed"
+    assert 0 <= scored.score <= 100
+
+
+def test_untrusted_html_and_script_tags_in_body(monkeypatch):
+    """
+    Rule 6: Untrusted input with embedded HTML and script tags
+    must be treated strictly as raw text and scored safely.
+    """
+    monkeypatch.setattr("app.scoring.engine.get_current_time", lambda: MOCK_NOW)
+    issue = Issue(
+        id=207,
+        repo="test/repo",
+        number=7,
+        title="<script>alert('xss')</script>",
+        body="<img src=x onerror=alert(1)> Check file src/main.py for details on how to fix this bug.",
+        url="https://github.com/test/repo/issues/7",
+        labels=["good first issue"],
+        assignees=[],
+        comments_count=0,
+        comments=[],
+        linked_pr_open=False,
+        created_at="2026-10-25T10:00:00Z",
+        updated_at="2026-10-25T10:00:00Z",
+    )
+    scored = score_issue(issue)
+    assert scored.status == "safe"
+    assert any("file references" in r for r in scored.reasons)
+
