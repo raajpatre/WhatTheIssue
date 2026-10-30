@@ -11,7 +11,11 @@ from app.scoring.engine import (
     determine_status,
 )
 
-FIXTURES_PATH = Path(__file__).resolve().parent.parent.parent / "sample_issues.json"
+_ROOT = Path(__file__).resolve().parent.parent.parent
+FIXTURES_PATH = _ROOT / "fixtures" / "sample_issues.json"
+if not FIXTURES_PATH.exists():
+    FIXTURES_PATH = _ROOT / "sample_issues.json"
+
 
 
 @pytest.fixture
