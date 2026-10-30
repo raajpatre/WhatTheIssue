@@ -151,4 +151,15 @@ Every library, API, dataset, and AI tool used across this project is transparent
 
 1. **GitHub API Rate Limits**: Unauthenticated calls to GitHub are limited to 60 requests/hour per IP. Adding a read-only personal access token (`GITHUB_TOKEN`) increases this to 5,000 requests/hour.
 2. **Heuristic Scoring**: Our scoring algorithm accurately detects PR references, assignees, and recency, but cannot guarantee maintainer response latency.
-3. **AI Explanations**: LLM-generated summaries and first steps provide helpful starting guidance, but contributors should always review repo-specific `CONTRIBUTING.md` guidelines before opening a pull request.
+3. **AI Explanations**: LLM-generated summaries and first steps provide helpful starting guidance, but AI can be wrong; contributors should always review repo-specific `CONTRIBUTING.md` guidelines before opening a pull request.
+4. **No User Accounts & Privacy**: Tracking is tied solely to a Telegram chat ID with no authentication; anyone who knows a chat ID could query its watched repos.
+5. **Database Persistence**: Tracked-repo data lives in the backend database (`watches` table in SQLite/Postgres); persistence across redeploys depends on backend volume mounts (coordinate with Part A).
+
+---
+
+## Next Steps
+
+- **Telegram or GitHub OAuth Login**: Replace plain chat ID lookup with secure user authentication sessions.
+- **Email Alerts**: Add an SMTP/SendGrid delivery channel for contributors who prefer inbox notifications over Telegram.
+- **WhatsApp Integration**: Support WhatsApp Business messaging for regional contributor preferences.
+- **Per-User Preferences**: Custom issue scoring thresholds, language filters, and scheduled digest summaries.

@@ -300,17 +300,19 @@ export async function createWatch(watchIn) {
  * @returns {Promise<Array>} List of Watch
  */
 export async function listWatches(contact = '') {
+  const trimmed = (contact ? String(contact) : '').trim();
+  // Privacy & Contract Rule: Never query or expose global watches or other users' watches
+  if (!trimmed) {
+    return [];
+  }
+
   if (USE_MOCK) {
     await delay(300);
     const watches = getMockWatches();
-    if (!contact) {
-      return watches;
-    }
-    const trimmed = String(contact).trim();
     return watches.filter((w) => w.contact === trimmed);
   }
 
-  const queryStr = contact ? `?contact=${encodeURIComponent(contact.trim())}` : '';
+  const queryStr = `?contact=${encodeURIComponent(trimmed)}`;
   return apiRequest(`/api/watch${queryStr}`);
 }
 

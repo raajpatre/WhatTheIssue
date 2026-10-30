@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Send, Trash2, RefreshCw, CheckCircle2, MessageSquare, AlertCircle } from 'lucide-react';
+import { Bell, Send, Trash2, RefreshCw, CheckCircle2, MessageSquare, AlertCircle, ShieldAlert } from 'lucide-react';
 import { createWatch, listWatches, deleteWatch, checkNow } from '../api';
 
 const LOCAL_STORAGE_CONTACT_KEY = 'myopensource_telegram_contact';
@@ -18,15 +18,16 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
   useEffect(() => {
     try {
       const savedContact = localStorage.getItem(LOCAL_STORAGE_CONTACT_KEY);
-      if (savedContact) {
-        setContact(savedContact);
-        loadWatches(savedContact);
+      if (savedContact && savedContact.trim()) {
+        const trimmed = savedContact.trim();
+        setContact(trimmed);
+        loadWatches(trimmed);
       } else {
-        loadWatches('');
+        setWatches([]);
       }
-    } catch (err) {
-      console.warn('Could not read from localStorage', err);
-      loadWatches('');
+    } catch {
+      // LocalStorage access restricted or unavailable
+      setWatches([]);
     }
   }, []);
 
@@ -38,20 +39,39 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
   }, [prefilledRepo]);
 
   const loadWatches = async (contactVal) => {
+    const trimmed = (contactVal || '').trim();
+    if (!trimmed) {
+      setWatches([]);
+      return;
+    }
+
     setLoadingList(true);
     try {
-      const data = await listWatches(contactVal);
+      const data = await listWatches(trimmed);
       setWatches(data || []);
     } catch (err) {
-      console.error('Failed to load watches', err);
+      // Security: Do not expose chat ID in error message or logs
+      console.error('Failed to load tracked repositories');
+      setFeedback({ type: 'error', message: 'Unable to retrieve tracked repositories. Please try again.' });
     } finally {
       setLoadingList(false);
     }
   };
 
+  const handleContactBlur = () => {
+    if (contact.trim()) {
+      loadWatches(contact.trim());
+    } else {
+      setWatches([]);
+    }
+  };
+
   const handleCreateWatch = async (e) => {
     e.preventDefault();
-    if (!repo.trim() || !contact.trim()) {
+    const cleanRepo = repo.trim();
+    const cleanContact = contact.trim();
+
+    if (!cleanRepo || !cleanContact) {
       setFeedback({ type: 'error', message: 'Repository and Telegram Chat ID are required.' });
       return;
     }
@@ -60,38 +80,38 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
     setFeedback(null);
 
     try {
-      // Parse tags
       const tags = tagsInput
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
 
       const created = await createWatch({
-        repo: repo.trim(),
+        repo: cleanRepo,
         tags: tags.length > 0 ? tags : ['good first issue'],
         channel: 'telegram',
-        contact: contact.trim()
+        contact: cleanContact
       });
 
-      // Save contact in localStorage
+      // Remember contact locally
       try {
-        localStorage.setItem(LOCAL_STORAGE_CONTACT_KEY, contact.trim());
-      } catch (err) {
-        console.warn('Failed to save contact to localStorage', err);
+        localStorage.setItem(LOCAL_STORAGE_CONTACT_KEY, cleanContact);
+      } catch {
+        // LocalStorage fallback
       }
 
       setFeedback({
         type: 'success',
-        message: `Now tracking ${created.repo}! You'll receive a Telegram alert when a matching issue appears.`
+        message: `Now tracking ${created.repo}! You will receive a Telegram alert when a matching issue appears.`
       });
 
       if (onToast) {
         onToast(`Tracking ${created.repo}`);
       }
 
-      // Refresh watches list
-      loadWatches(contact.trim());
+      // Refresh list for this user's chat ID
+      loadWatches(cleanContact);
     } catch (err) {
+      // Security: Never print contact/chat ID in error messages
       setFeedback({ type: 'error', message: err.message || 'Failed to create watch.' });
     } finally {
       setSubmitting(false);
@@ -106,7 +126,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
         onToast(`Removed watch for ${repoName}`);
       }
     } catch (err) {
-      setFeedback({ type: 'error', message: err.message || 'Failed to remove watch.' });
+      setFeedback({ type: 'error', message: 'Failed to remove watch. Please try again.' });
     }
   };
 
@@ -118,15 +138,23 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
       setFeedback({ type: 'success', message: msg });
       if (onToast) onToast(msg);
     } catch (err) {
-      setFeedback({ type: 'error', message: err.message || 'Check failed.' });
+      setFeedback({ type: 'error', message: 'Check failed. Please verify server connection.' });
     } finally {
       setCheckingNow(false);
     }
   };
 
+  // Helper to safely format chat ID without exposing full raw numbers
+  const maskChatId = (idStr) => {
+    if (!idStr) return '';
+    const str = String(idStr);
+    if (str.length <= 4) return '••••';
+    return `••••${str.slice(-4)}`;
+  };
+
   return (
     <div className="track-view">
-      {/* Left: Create Watch Form */}
+      {/* Left Column: Create Watch Form */}
       <div className="track-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
           <Bell size={22} color="#3b82f6" />
@@ -176,6 +204,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
               placeholder="e.g. 123456789"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
+              onBlur={handleContactBlur}
               required
             />
           </div>
@@ -199,10 +228,16 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
               <span>{submitting ? 'Setting Watch...' : 'Start Watching'}</span>
             </button>
           </div>
+
+          {/* Privacy Notice Required by PART-D specification */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem', marginTop: '1rem', color: 'var(--text-subtle)', fontSize: '0.75rem', lineHeight: 1.4 }}>
+            <ShieldAlert size={14} style={{ flexShrink: 0, marginTop: '2px', color: '#94a3b8' }} />
+            <span>Demo app: no login. Anyone who knows your chat ID could see your tracked repos.</span>
+          </div>
         </form>
       </div>
 
-      {/* Right: Active Watches & Demo Check Trigger */}
+      {/* Right Column: Watched Repos */}
       <div className="track-card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
           <h3>Your Watched Repos</h3>
@@ -227,10 +262,21 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
             <div className="skeleton skeleton-title" style={{ width: '100%', height: '54px' }} />
             <div className="skeleton skeleton-title" style={{ width: '100%', height: '54px' }} />
           </div>
+        ) : !contact.trim() ? (
+          /* Empty localStorage / new device state specified in PART-D */
+          <div style={{ textAlign: 'center', padding: '3rem 1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-md)' }}>
+            <MessageSquare size={32} color="var(--text-subtle)" style={{ margin: '0 auto 0.75rem' }} />
+            <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.375rem' }}>
+              Enter your Telegram chat ID to see your tracked repos
+            </h4>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem', maxWidth: '300px', margin: '0 auto' }}>
+              We look up watches keyed strictly by your chat ID. There is no public list.
+            </p>
+          </div>
         ) : watches.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '2.5rem 1rem', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-md)' }}>
             <p style={{ color: 'var(--text-subtle)', fontSize: '0.875rem' }}>
-              No repositories watched yet. Add one on the left!
+              No repositories watched yet for this chat ID. Add one on the left!
             </p>
           </div>
         ) : (
@@ -247,7 +293,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
                     ))}
                   </div>
                   <span className="watch-item-contact">
-                    Chat ID: {w.contact}
+                    Chat ID: {maskChatId(w.contact)}
                   </span>
                 </div>
 
