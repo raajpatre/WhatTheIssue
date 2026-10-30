@@ -132,7 +132,6 @@ export default function HomeHero({ onAnalyze, loading }) {
 
           {/* Tag Chips */}
           <div className="tag-selection">
-            <span className="tag-label">Tags:</span>
             {POPULAR_TAGS.map((tag) => {
               const active = selectedTags.includes(tag);
               return (
