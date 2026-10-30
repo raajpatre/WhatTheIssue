@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 
 _ROOT = Path(__file__).resolve().parents[2]
 _BACKEND = Path(__file__).resolve().parents[1]
-load_dotenv(_ROOT / ".env")
-load_dotenv(_BACKEND / ".env")
-load_dotenv()
+if (_ROOT / ".env").is_file():
+    load_dotenv(_ROOT / ".env")
+if (_BACKEND / ".env").is_file():
+    load_dotenv(_BACKEND / ".env")
+
 
 
 def _bool(name: str, default: bool = False) -> bool:
@@ -34,7 +36,7 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 ENABLE_SCHEDULER = _bool("ENABLE_SCHEDULER", False)
 ENABLE_TELEGRAM_BOT = _bool("ENABLE_TELEGRAM_BOT", False)
-POLL_INTERVAL_MINUTES = _int("POLL_INTERVAL_MINUTES", 10)
+POLL_INTERVAL_SECONDS = _int("POLL_INTERVAL_SECONDS", 10)
 DEMO_REPO = os.getenv("DEMO_REPO", "")
 DEMO_GITHUB_TOKEN = os.getenv("DEMO_GITHUB_TOKEN", "")
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN") or "http://localhost:5173"
