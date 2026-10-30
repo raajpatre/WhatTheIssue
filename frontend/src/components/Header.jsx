@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitPullRequest, Bell, ArrowLeft } from 'lucide-react';
+import { Bell, ArrowLeft } from 'lucide-react';
 
 export default function Header({ currentView, setCurrentView, currentRepo, onResetSearch }) {
   return (
@@ -13,12 +13,11 @@ export default function Header({ currentView, setCurrentView, currentRepo, onRes
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onResetSearch(); }}
           title="Return to Home"
         >
-          <div className="brand-icon">
-            <GitPullRequest size={18} strokeWidth={2.5} />
-          </div>
-          <span className="brand-name">
-            my<span>OpenSource</span>
-          </span>
+          <img
+            className="brand-logo"
+            src="/brand/myopensource-logo.png"
+            alt="myOpenSource"
+          />
         </div>
 
         <div className="nav-actions">

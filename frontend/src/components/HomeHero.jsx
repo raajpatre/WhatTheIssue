@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShieldCheck, BellRing, BookOpen, Plus, X } from 'lucide-react';
+import { Search, ShieldCheck, BellRing, Plus, X, Moon } from 'lucide-react';
 
 const POPULAR_TAGS = ['good first issue', 'help wanted', 'beginner'];
 const EXAMPLE_REPOS = [
@@ -56,6 +56,12 @@ export default function HomeHero({ onAnalyze, loading }) {
 
   return (
     <div className="hero-section">
+      <div className="hero-atmosphere" aria-hidden="true">
+        <span className="moon"><Moon size={88} /></span>
+        <span className="ember ember-one" />
+        <span className="ember ember-two" />
+        <span className="ember ember-three" />
+      </div>
       <h1 className="hero-title">
         <span className="hero-title-gradient">Labels lie. Find issues that are </span>
         <span className="hero-title-highlight">actually safe to start.</span>
@@ -167,7 +173,7 @@ export default function HomeHero({ onAnalyze, loading }) {
         <div className="step-card">
           <div className="step-number">Step 01</div>
           <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Search size={18} color="#3b82f6" />
+            <Search size={18} />
             <span>Paste Any Repo</span>
           </div>
           <p className="step-desc">
@@ -178,7 +184,7 @@ export default function HomeHero({ onAnalyze, loading }) {
         <div className="step-card">
           <div className="step-number">Step 02</div>
           <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ShieldCheck size={18} color="#10b981" />
+            <ShieldCheck size={18} />
             <span>Heuristic Scoring</span>
           </div>
           <p className="step-desc">
@@ -189,7 +195,7 @@ export default function HomeHero({ onAnalyze, loading }) {
         <div className="step-card">
           <div className="step-number">Step 03</div>
           <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <BellRing size={18} color="#8b5cf6" />
+            <BellRing size={18} />
             <span>AI Guide & Watcher</span>
           </div>
           <p className="step-desc">

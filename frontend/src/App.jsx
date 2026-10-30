@@ -137,7 +137,7 @@ export default function App() {
                 <Info size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div>
                   <strong>Maintainer Note:</strong>
-                  <p style={{ marginTop: '0.25rem', color: '#e0f2fe' }}>{note}</p>
+                  <p style={{ marginTop: '0.25rem', color: 'var(--muted)' }}>{note}</p>
                 </div>
               </div>
             )}
@@ -185,10 +185,10 @@ export default function App() {
                   </label>
 
                   <div className="status-counts-summary">
-                    <span style={{ color: '#10b981' }}>
+                    <span style={{ color: '#9bd3ac' }}>
                       ● {issues.filter((i) => i.status === 'safe').length} Safe
                     </span>
-                    <span style={{ color: '#94a3b8' }}>
+                    <span style={{ color: 'var(--muted)' }}>
                       ● {issues.filter((i) => i.status === 'unclear').length} Unclear
                     </span>
                     <span style={{ color: '#ef4444' }}>
@@ -251,7 +251,7 @@ export default function App() {
       <div className="toast-container">
         {toasts.map((toast) => (
           <div key={toast.id} className="toast">
-            <Sparkles size={14} color="#10b981" />
+            <Sparkles size={14} color="var(--ember)" />
             <span>{toast.message}</span>
           </div>
         ))}
