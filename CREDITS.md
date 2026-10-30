@@ -10,6 +10,8 @@ Every library, API, dataset, template, and AI tool used across **myOpenSource** 
 - **[Lucide React](https://lucide.dev/)** (`^0.460.0`) — Clean and lightweight SVG icon collection (ISC License)
 - **[Inter Font](https://rsms.me/inter/)** — Modern sans-serif typography via Google Fonts (SIL Open Font License 1.1)
 - **[JetBrains Mono Font](https://www.jetbrains.com/lp/mono/)** — Monospaced font for code snippets and tags via Google Fonts (SIL Open Font License 1.1)
+- **[Uiverse.io](https://uiverse.io/)** — Animated star burst button effect by MuhammadHasann for the repository analyze trigger
+
 
 ### Backend & APIs
 - **[FastAPI](https://fastapi.tiangolo.com/)** — High-performance Python web framework for APIs (MIT License)

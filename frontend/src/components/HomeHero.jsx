@@ -8,6 +8,32 @@ const EXAMPLE_REPOS = [
   'fastapi/fastapi'
 ];
 
+function StarSvg() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlSpace="preserve"
+      version="1.1"
+      viewBox="0 0 784.11 815.53"
+      style={{
+        shapeRendering: 'geometricPrecision',
+        textRendering: 'geometricPrecision',
+        imageRendering: 'optimizeQuality',
+        fillRule: 'evenodd',
+        clipRule: 'evenodd',
+      }}
+    >
+      <g id="Layer_x0020_1">
+        <path
+          className="fil0"
+          d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+        />
+      </g>
+    </svg>
+  );
+}
+
+
 export default function HomeHero({ onAnalyze, loading }) {
   const [url, setUrl] = useState('');
   const [selectedTags, setSelectedTags] = useState(['good first issue']);
@@ -91,10 +117,16 @@ export default function HomeHero({ onAnalyze, loading }) {
             </div>
             <button
               type="submit"
-              className="btn btn-primary search-btn"
+              className="search-btn"
               disabled={loading || !url.trim()}
             >
-              {loading ? 'Analyzing...' : 'Analyze Repo'}
+              <span>{loading ? 'Analyzing...' : 'Analyze Repo'}</span>
+              <div className="star-1" aria-hidden="true"><StarSvg /></div>
+              <div className="star-2" aria-hidden="true"><StarSvg /></div>
+              <div className="star-3" aria-hidden="true"><StarSvg /></div>
+              <div className="star-4" aria-hidden="true"><StarSvg /></div>
+              <div className="star-5" aria-hidden="true"><StarSvg /></div>
+              <div className="star-6" aria-hidden="true"><StarSvg /></div>
             </button>
           </div>
 
