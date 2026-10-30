@@ -260,7 +260,7 @@ export default function App() {
       {/* App Footer */}
       <footer className="footer">
         <p>
-          myOpenSource · Built for <strong>Devf8rge x Hacktoberfest 2026</strong> · Read-only GitHub Client
+          myOpenSource · Built for <strong>Devf8rge x Hacktoberfest 2026</strong>
         </p>
       </footer>
     </div>

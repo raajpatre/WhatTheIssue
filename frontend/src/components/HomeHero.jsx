@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Sparkles, ShieldCheck, BellRing, BookOpen, Plus, X } from 'lucide-react';
+import { Search, ShieldCheck, BellRing, BookOpen, Plus, X } from 'lucide-react';
 
 const POPULAR_TAGS = ['good first issue', 'help wanted', 'beginner'];
 const EXAMPLE_REPOS = [
@@ -56,11 +56,6 @@ export default function HomeHero({ onAnalyze, loading }) {
 
   return (
     <div className="hero-section">
-      <div className="hero-pill">
-        <Sparkles size={14} />
-        <span>Hacktoberfest 2026 Edition · AI-Assisted Issue Triage</span>
-      </div>
-
       <h1 className="hero-title">
         <span className="hero-title-gradient">Labels lie. Find issues that are </span>
         <span className="hero-title-highlight">actually safe to start.</span>

@@ -1,9 +1,7 @@
 import React from 'react';
-import { GitPullRequest, Radio, Bell, ArrowLeft } from 'lucide-react';
+import { GitPullRequest, Bell, ArrowLeft } from 'lucide-react';
 
 export default function Header({ currentView, setCurrentView, currentRepo, onResetSearch }) {
-  const isMock = import.meta.env.VITE_USE_MOCK !== '0' && import.meta.env.VITE_USE_MOCK !== 'false';
-
   return (
     <header className="navbar">
       <div className="navbar-inner">
@@ -24,10 +22,6 @@ export default function Header({ currentView, setCurrentView, currentRepo, onRes
         </div>
 
         <div className="nav-actions">
-          <div className={`badge-mode ${isMock ? 'mock' : 'live'}`} title={isMock ? 'Running on Mock Data (VITE_USE_MOCK=1)' : 'Connected to FastAPI Backend'}>
-            <span className="dot"></span>
-            <span>{isMock ? 'Mock Mode' : 'Backend Live'}</span>
-          </div>
 
           {currentView !== 'home' && (
             <button 
