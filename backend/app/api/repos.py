@@ -1,6 +1,7 @@
 import time
 
 from fastapi import APIRouter, Query
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 
 from app.ai import service as ai
@@ -30,14 +31,14 @@ def _parse_tags(tags: str | None) -> list[str]:
     return [part for part in parts if part] or list(DEFAULT_TAGS)
 
 
-def _scored_issues(repo: str, tags: list[str]) -> list[ScoredIssue]:
+async def _scored_issues(repo: str, tags: list[str]) -> list[ScoredIssue]:
     key = (repo, tuple(tags))
     hit = _issue_cache.get(key)
     now = time.time()
     if hit and now - hit[0] < _ISSUE_TTL:
         scored = hit[1]
     else:
-        issues = fetch_issues(repo, tags=tags)
+        issues = await run_in_threadpool(fetch_issues, repo, tags)
         scored = rank(issues)
         crud.upsert_issues(repo, issues)
         _issue_cache[key] = (now, scored)
@@ -49,10 +50,10 @@ def _scored_issues(repo: str, tags: list[str]) -> list[ScoredIssue]:
 
 
 @router.post("/repos")
-def add_repo(body: RepoIn) -> dict:
+async def add_repo(body: RepoIn) -> dict:
     repo = parse_repo(body.url)
     tags = body.tags or list(DEFAULT_TAGS)
-    issues = fetch_issues(repo, tags=tags)
+    issues = await run_in_threadpool(fetch_issues, repo, tags)
     scored = rank(issues)
     crud.upsert_issues(repo, issues)
     note = None if scored else EMPTY_NOTE
@@ -60,7 +61,7 @@ def add_repo(body: RepoIn) -> dict:
 
 
 @router.get("/repos/{owner}/{name}/issues")
-def list_issues(
+async def list_issues(
     owner: str,
     name: str,
     tags: str | None = Query(default=None),
@@ -68,20 +69,20 @@ def list_issues(
 ) -> list[ScoredIssue]:
     repo = parse_repo(f"{owner}/{name}")
     parsed_tags = _parse_tags(tags)
-    scored = _scored_issues(repo, parsed_tags)
+    scored = await _scored_issues(repo, parsed_tags)
     if status:
         scored = [item for item in scored if item.status == status]
     return scored
 
 
 @router.get("/repos/{owner}/{name}/suggestions")
-def list_suggestions(owner: str, name: str) -> list[ReadmeSuggestion]:
+async def list_suggestions(owner: str, name: str) -> list[ReadmeSuggestion]:
     repo = parse_repo(f"{owner}/{name}")
     hit = _suggest_cache.get(repo)
     now = time.time()
     if hit and now - hit[0] < _SUGGEST_TTL:
         return hit[1]
-    readme = fetch_readme(repo)
-    suggestions = ai.suggest_from_readme(repo, readme)
+    readme = await run_in_threadpool(fetch_readme, repo)
+    suggestions = await run_in_threadpool(ai.suggest_from_readme, repo, readme)
     _suggest_cache[repo] = (now, suggestions)
     return suggestions

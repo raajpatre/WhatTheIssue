@@ -7,14 +7,18 @@ from fastapi.responses import JSONResponse
 from app import config as _config  # noqa: F401
 from app.api import health, issues, repos, watch
 from app.api.errors import AppError, error_body
+from app.db.session import init_db
+from app.github.client import close_http_client
 from app.github.exceptions import RateLimitError, RepoNotFoundError, UpstreamError
 from app.watcher.service import start_scheduler
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    init_db()
     start_scheduler()
     yield
+    close_http_client()
 
 
 app = FastAPI(title="myOpenSource", lifespan=lifespan)
