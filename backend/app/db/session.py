@@ -25,6 +25,10 @@ _engine_url: str | None = None
 _SessionLocal: sessionmaker | None = None
 
 
+import re
+from urllib.parse import parse_qs, quote_plus, urlencode, urlsplit, urlunsplit
+
+
 def _is_sqlite(url: str) -> bool:
     return url.startswith("sqlite:")
 
@@ -39,6 +43,29 @@ def _make_engine(url: str) -> Engine:
         kwargs["connect_args"] = {"check_same_thread": False}
         if _is_memory(url):
             kwargs["poolclass"] = StaticPool
+    elif "postgres" in url:
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[len("postgres://"):]
+        m = re.match(
+            r"^(?P<proto>[a-zA-Z0-9+]+://)(?P<user>[^:]+):\[(?P<password>.+)\]@(?P<host>[^@/:]+)(?P<rest>.*)$",
+            url,
+        )
+        if m:
+            clean_pwd = quote_plus(m.group("password"))
+            url = (
+                f"{m.group('proto')}{m.group('user')}:{clean_pwd}@"
+                f"{m.group('host')}{m.group('rest')}"
+            )
+        parsed = urlsplit(url)
+        if parsed.query:
+            params = parse_qs(parsed.query)
+            schema = params.pop("schema", None)
+            new_query = urlencode(params, doseq=True)
+            url = urlunsplit(
+                (parsed.scheme, parsed.netloc, parsed.path, new_query, parsed.fragment)
+            )
+            if schema:
+                kwargs.setdefault("connect_args", {})["options"] = f"-c search_path={schema[0]}"
     engine = create_engine(url, **kwargs)
     if _is_sqlite(url):
 

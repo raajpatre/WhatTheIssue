@@ -23,6 +23,8 @@ Every library, API, dataset, template, and AI tool used across **myOpenSource** 
 - **[httpx](https://www.python-httpx.org/)** (`>=0.25.0`) — HTTP client for Python with sync and async APIs (BSD License)
 - **[pytest](https://docs.pytest.org/)** (`>=8.0.0`) — Robust testing framework for Python (MIT License)
 - **[Render](https://render.com/)** — Backend hosting target (free web service; check current idle/hour limits)
+- **[Supabase](https://supabase.com/)** — Managed PostgreSQL cloud database for persistent storage
+- **[psycopg](https://www.psycopg.org/)** (`>=3.1.0`) — PostgreSQL database adapter for Python (LGPL-3.0 License)
 
 ### AI Models & Providers
 - **[Google Gemini 1.5 Flash](https://ai.google.dev/)** — Fast, multimodal reasoning LLM for issue summarization and beginner onboarding
