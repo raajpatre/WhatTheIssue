@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from app import config as _config  # noqa: F401
 from app.api import health, issues, repos, watch
 from app.api.errors import AppError, error_body
+from app.api.throttle import IPThrottleMiddleware
 from app.db.session import init_db
 from app.github.client import close_http_client
 from app.github.exceptions import RateLimitError, RepoNotFoundError, UpstreamError
@@ -23,6 +24,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(title="myOpenSource", lifespan=lifespan)
 
+app.add_middleware(IPThrottleMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -51,7 +53,10 @@ async def handle_value_error(_request: Request, exc: ValueError) -> JSONResponse
 async def handle_rate_limit(_request: Request, exc: RateLimitError) -> JSONResponse:
     return JSONResponse(
         status_code=429,
-        content=error_body("RATE_LIMITED", str(exc) or "GitHub rate limit exceeded"),
+        content=error_body(
+            "RATE_LIMITED",
+            str(exc) or "GitHub rate limit hit, try again in a minute",
+        ),
     )
 
 

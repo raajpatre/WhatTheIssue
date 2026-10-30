@@ -17,7 +17,7 @@ class RepoNotFoundError(AppError):
 
 
 class RateLimitedError(AppError):
-    def __init__(self, message: str = "GitHub rate limit exceeded") -> None:
+    def __init__(self, message: str = "GitHub rate limit hit, try again in a minute") -> None:
         super().__init__("RATE_LIMITED", message, 429)
 
 

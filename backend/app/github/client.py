@@ -120,7 +120,7 @@ def _raise_for_github(resp: httpx.Response, *, allow_304: bool = False) -> None:
         raise RepoNotFoundError("Repository not found")
     remaining_zero = remaining is not None and remaining.strip() == "0"
     if remaining_zero or resp.status_code in (403, 429):
-        raise RateLimitError("GitHub rate limit exceeded")
+        raise RateLimitError("GitHub rate limit hit, try again in a minute")
     if resp.status_code >= 400:
         raise UpstreamError(f"GitHub returned HTTP {resp.status_code}")
 
