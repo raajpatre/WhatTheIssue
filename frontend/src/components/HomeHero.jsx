@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShieldCheck, BellRing, Plus, X } from 'lucide-react';
+import { Search, Plus, X } from 'lucide-react';
 
 const POPULAR_TAGS = ['good first issue', 'help wanted', 'beginner'];
 const EXAMPLE_REPOS = [
@@ -61,18 +61,20 @@ export default function HomeHero({ onAnalyze, loading }) {
         <span className="ember ember-two" />
         <span className="ember ember-three" />
       </div>
-      <h1 className="hero-title">
-        <span className="hero-title-gradient">Labels lie. Find issues that are </span>
-        <span className="hero-title-highlight">actually safe to start.</span>
-      </h1>
+      <div className="hero-layout">
+        <div className="hero-primary">
+          <h1 className="hero-title">
+            <span className="hero-title-gradient">Labels lie. Find issues that are </span>
+            <span className="hero-title-highlight">actually safe to start.</span>
+          </h1>
 
-      <p className="hero-subtitle">
-        Most &quot;good first issues&quot; are already claimed, abandoned, or require 10 hours of context.
-        We scan PRs, comments, and activity to give you verified starter tasks.
-      </p>
+          <p className="hero-subtitle">
+            Most &quot;good first issues&quot; are already claimed, abandoned, or require 10 hours of context.
+            We scan PRs, comments, and activity to give you verified starter tasks.
+          </p>
 
       {/* Search Input Box */}
-      <div className="search-card">
+          <div className="search-card">
         <form onSubmit={handleSubmit}>
           <div className="search-input-group">
             <div className="input-wrapper">
@@ -165,29 +167,10 @@ export default function HomeHero({ onAnalyze, loading }) {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Three stages, shown in one rotating archive card */}
-      <section className="archive-steps" aria-label="How myOpenSource works">
-        <div className="archive-steps-track">
-          <article className="archive-step">
-            <div className="step-number">Step 01</div>
-            <div className="step-title"><Search size={22} /><span>Paste Any Repo</span></div>
-            <p className="step-desc">Provide a GitHub URL. We fetch all open beginner issues and README instructions via read-only APIs.</p>
-          </article>
-          <article className="archive-step">
-            <div className="step-number">Step 02</div>
-            <div className="step-title"><ShieldCheck size={22} /><span>Heuristic Scoring</span></div>
-            <p className="step-desc">We flag open PR collisions, assignee inactivity, and stale threads to sort safe issues from claimed traps.</p>
-          </article>
-          <article className="archive-step">
-            <div className="step-number">Step 03</div>
-            <div className="step-title"><BellRing size={22} /><span>AI Guide &amp; Watcher</span></div>
-            <p className="step-desc">AI explains what files to touch in plain English. Track the repo to get alerted on Telegram the moment a fresh issue drops.</p>
-          </article>
+          </div>
         </div>
-        <div className="archive-step-dots" aria-hidden="true"><span /><span /><span /></div>
-      </section>
+
+      </div>
     </div>
   );
 }
