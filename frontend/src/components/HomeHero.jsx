@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShieldCheck, BellRing, Plus, X, Moon } from 'lucide-react';
+import { Search, ShieldCheck, BellRing, Plus, X } from 'lucide-react';
 
 const POPULAR_TAGS = ['good first issue', 'help wanted', 'beginner'];
 const EXAMPLE_REPOS = [
@@ -57,7 +57,6 @@ export default function HomeHero({ onAnalyze, loading }) {
   return (
     <div className="hero-section">
       <div className="hero-atmosphere" aria-hidden="true">
-        <span className="moon"><Moon size={88} /></span>
         <span className="ember ember-one" />
         <span className="ember ember-two" />
         <span className="ember ember-three" />
@@ -168,41 +167,27 @@ export default function HomeHero({ onAnalyze, loading }) {
         </div>
       </div>
 
-      {/* How it works strip */}
-      <div className="how-it-works-grid">
-        <div className="step-card">
-          <div className="step-number">Step 01</div>
-          <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Search size={18} />
-            <span>Paste Any Repo</span>
-          </div>
-          <p className="step-desc">
-            Provide a GitHub URL. We fetch all open beginner issues and README instructions via read-only APIs.
-          </p>
+      {/* Three stages, shown in one rotating archive card */}
+      <section className="archive-steps" aria-label="How myOpenSource works">
+        <div className="archive-steps-track">
+          <article className="archive-step">
+            <div className="step-number">Step 01</div>
+            <div className="step-title"><Search size={22} /><span>Paste Any Repo</span></div>
+            <p className="step-desc">Provide a GitHub URL. We fetch all open beginner issues and README instructions via read-only APIs.</p>
+          </article>
+          <article className="archive-step">
+            <div className="step-number">Step 02</div>
+            <div className="step-title"><ShieldCheck size={22} /><span>Heuristic Scoring</span></div>
+            <p className="step-desc">We flag open PR collisions, assignee inactivity, and stale threads to sort safe issues from claimed traps.</p>
+          </article>
+          <article className="archive-step">
+            <div className="step-number">Step 03</div>
+            <div className="step-title"><BellRing size={22} /><span>AI Guide &amp; Watcher</span></div>
+            <p className="step-desc">AI explains what files to touch in plain English. Track the repo to get alerted on Telegram the moment a fresh issue drops.</p>
+          </article>
         </div>
-
-        <div className="step-card">
-          <div className="step-number">Step 02</div>
-          <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ShieldCheck size={18} />
-            <span>Heuristic Scoring</span>
-          </div>
-          <p className="step-desc">
-            We flag open PR collisions, assignee inactivity, and stale threads to sort safe issues from claimed traps.
-          </p>
-        </div>
-
-        <div className="step-card">
-          <div className="step-number">Step 03</div>
-          <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <BellRing size={18} />
-            <span>AI Guide & Watcher</span>
-          </div>
-          <p className="step-desc">
-            AI explains what files to touch in plain English. Track the repo to get alerted on Telegram the moment a fresh issue drops.
-          </p>
-        </div>
-      </div>
+        <div className="archive-step-dots" aria-hidden="true"><span /><span /><span /></div>
+      </section>
     </div>
   );
 }
