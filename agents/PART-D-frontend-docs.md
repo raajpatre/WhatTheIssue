@@ -25,6 +25,11 @@ Vite + React. Tailwind is fine if it speeds you up. Env: `VITE_API_BASE` (defaul
    - Filter: by default show `safe` and `unclear`; a toggle shows `claimed` and `stale` too.
    - If `note` is present or the list is empty, show it and switch to the README tab.
 3. **Track**: form with repo (prefilled), tags, and **Telegram chat ID**, with helper text "Open our Telegram bot, send /start, paste the ID here". List the user's watches (by contact, remembered in `localStorage`, wrapped in try/catch), delete button, and a **Check now** button (this one is for the demo).
+   - **There is no login. The chat ID is the only identity**, and the backend stores watches in a database keyed by it (`watches` table, owned by Part A). Consequences for the UI:
+     - Only ever list watches for the chat ID the user typed (`GET /api/watch?contact=`). Never show a global list of watches or other people's IDs.
+     - If `localStorage` is empty (cleared, new device), show "Enter your Telegram chat ID to see your tracked repos" instead of an empty, confusing page.
+     - Show a small notice under the form: "Demo app: no login. Anyone who knows your chat ID could see your tracked repos."
+     - Don't put chat IDs in URLs, console logs or error messages.
 
 ## D2 — Quality (P1, 3:30–7:30 AM)
 - States for everything: loading skeletons, empty, error by code (`RATE_LIMITED` → friendly "GitHub rate limit hit, try again in a minute", `INVALID_REPO`, `REPO_NOT_FOUND`), network offline.
@@ -42,7 +47,8 @@ Nice typography, empty-state illustration, a clear logo/wordmark, a small "how i
 - Setup: backend (venv, `pip install -r backend/requirements.txt`, `.env` from `.env.example`, `uvicorn app.main:app --reload`), frontend (`npm install`, `npm run dev`), running tests, running the extension (load unpacked), Telegram bot setup.
 - Contributing section (branching, PRs, tests) and a note that the project is read-only toward other people's repos.
 - Tech stack and a **Credits** section pointing at `CREDITS.md`, including every AI tool used.
-- Honest limitations (rate limits, scoring is heuristic, AI can be wrong).
+- Honest limitations: GitHub rate limits, scoring is heuristic, AI can be wrong, **no user accounts (tracking is tied to a Telegram chat ID, so it is not private)**, and tracked-repo data lives in the backend database (ask Part A where it is hosted and whether it survives redeploys).
+- Next steps (one line each): Telegram or GitHub login, email alerts, WhatsApp, per-user preferences.
 At **8:30 AM** ask each part owner for 5 lines about their part and fold them in.
 `CREDITS.md`: one line per library, API, AI tool, template. Make sure the licence file is present.
 
