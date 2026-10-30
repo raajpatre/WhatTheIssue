@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=UnifrakturCook:wght@700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/dashley');
+.hero-title{font-family:'Dashley',var(--font-sans)!important;font-weight:400!important;letter-spacing:0!important;line-height:1.08!important}
 /* Supplied logo treatment: its warm near-black is now the page foundation. */
 body{background-color:#130504!important;background-image:linear-gradient(rgba(19,5,4,.64),rgba(19,5,4,.76)),url('/brand/bg.png')!important;background-size:cover!important;background-position:center top!important;background-attachment:fixed!important}body:before{display:none!important}.navbar{background:#100302!important;backdrop-filter:none}.moon{display:none!important}.brand-logo{display:block;width:auto;height:42px;max-width:min(270px,52vw);object-fit:contain}@media(max-width:480px){.brand-logo{height:33px;max-width:54vw}}
 /* Desktop: archive workflow sits in a portrait panel beside the finder. */
