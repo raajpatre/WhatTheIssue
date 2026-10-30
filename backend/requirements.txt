@@ -1,0 +1,4 @@
+# backend/requirements.txt (shared, append-only)
+pydantic>=2.0.0
+httpx>=0.25.0
+pytest>=8.0.0
