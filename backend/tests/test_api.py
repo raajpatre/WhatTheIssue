@@ -138,6 +138,29 @@ def test_watch_crud_and_check_now() -> None:
     assert deleted.json() == {"ok": True}
 
 
+def test_watch_status_shape() -> None:
+    response = client.get("/api/watch/status")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "ok"
+    assert "scheduler" in body
+    assert "bot" in body
+    assert "watched_repos_count" in body
+
+
+def test_watch_test_notify_shape() -> None:
+    # Missing contact should return 400
+    bad_res = client.post("/api/watch/test-notify", json={"contact": ""})
+    assert bad_res.status_code == 400
+
+    # With contact, returns test payload without crashing
+    res = client.post("/api/watch/test-notify", json={"contact": "123456", "channel": "telegram"})
+    assert res.status_code == 200
+    assert "ok" in res.json()
+    assert "message" in res.json()
+
+
+
 def test_repo_not_found_shape(monkeypatch) -> None:
     def _raise(repo, tags=None, limit=30):
         raise RepoNotFoundError("Repository not found")

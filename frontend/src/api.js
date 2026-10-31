@@ -353,3 +353,41 @@ export async function checkNow() {
     method: 'POST'
   });
 }
+
+/**
+ * 9. Test Notification Channel (POST /api/watch/test-notify)
+ * @param {string} contact - Telegram Chat ID
+ * @param {string} [channel='telegram']
+ * @returns {Promise<{ ok: boolean, message: string }>}
+ */
+export async function testNotify(contact, channel = 'telegram') {
+  if (USE_MOCK) {
+    await delay(500);
+    return { ok: true, message: 'Mock notification dispatched to chat ID.' };
+  }
+
+  return apiRequest('/api/watch/test-notify', {
+    method: 'POST',
+    body: JSON.stringify({ contact: String(contact).trim(), channel })
+  });
+}
+
+/**
+ * 10. Get Watcher & Bot Status (GET /api/watch/status)
+ * @returns {Promise<Object>}
+ */
+export async function getWatchStatus() {
+  if (USE_MOCK) {
+    await delay(300);
+    return {
+      status: 'ok',
+      scheduler: { enabled: true, running: true, poll_interval_seconds: 10 },
+      bot: { enabled: true, running: true, token_configured: true },
+      watched_repos_count: 2,
+      watched_repos: ['demo-org/demo-repo']
+    };
+  }
+
+  return apiRequest('/api/watch/status');
+}
+
