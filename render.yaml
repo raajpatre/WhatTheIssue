@@ -1,23 +1,31 @@
-# Deploy config for the Part A FastAPI backend.
-# VERIFY: https://render.com/docs/free and https://render.com/docs/web-services
-# Render free web services sleep after idle (~15 min) and have a monthly hour cap.
-# Set secrets in the Render dashboard — never commit them.
-# ENABLE_SCHEDULER=1 and ENABLE_TELEGRAM_BOT=1 ONLY on an always-on instance
-# (two processes long-polling one Telegram token cause 409 errors).
+# Deployment configuration for the FastAPI backend on Render
+# Docs: https://render.com/docs/web-services
+# Set secrets in the Render dashboard (never commit real tokens).
 
 services:
   - type: web
-    name: myopensource-api
+    name: whattheissue-api
     runtime: python
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT
     envVars:
+      # Database: SQLite for single ephemeral instance, or Supabase PostgreSQL for persistent cloud storage
       - key: DATABASE_URL
         value: sqlite:///./myopensource.db
-      - key: ENABLE_SCHEDULER
-        value: "0"
-      - key: ENABLE_TELEGRAM_BOT
-        value: "0"
+      # LLM configuration
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: GEMINI_API_KEY
+        sync: false
+      # GitHub read-only token (raises rate limit from 60 to 5,000 req/hr)
       - key: GITHUB_TOKEN
         sync: false
+      # Telegram alerts & background watcher (enable ONLY on 1 always-on instance)
+      - key: ENABLE_SCHEDULER
+        value: "1"
+      - key: ENABLE_TELEGRAM_BOT
+        value: "1"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: POLL_INTERVAL_MINUTES
+        value: "10"
