@@ -14,8 +14,8 @@ import {
 
 // Configuration
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
-// Check if mock mode is enabled (defaults to true if unset or '1')
-const USE_MOCK = import.meta.env.VITE_USE_MOCK !== '0' && import.meta.env.VITE_USE_MOCK !== 'false';
+// Check if mock mode is explicitly requested (default: false / live backend mode)
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === '1' || import.meta.env.VITE_USE_MOCK === 'true';
 
 // Helper for mock latency to test UI skeletons/loaders
 const delay = (ms = 400) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -32,7 +32,7 @@ function getMockWatches() {
   } catch (err) {
     console.warn('Failed to read mock watches from localStorage', err);
   }
-  return [...MOCK_INITIAL_WATCHES];
+  return [];
 }
 
 function saveMockWatches(watches) {
@@ -137,7 +137,7 @@ export async function analyzeRepo(url, tags = ['good first issue']) {
       throw new ApiError('GitHub API rate limit exceeded. Please wait a moment before trying again.', 'RATE_LIMITED', 429);
     }
 
-    let repoSlug = 'demo-org/demo-repo';
+    let repoSlug = 'pallets/flask';
     try {
       repoSlug = parseRepoSlug(trimmed);
     } catch {
@@ -379,12 +379,13 @@ export async function testNotify(contact, channel = 'telegram') {
 export async function getWatchStatus() {
   if (USE_MOCK) {
     await delay(300);
+    const mockList = getMockWatches();
     return {
       status: 'ok',
       scheduler: { enabled: true, running: true, poll_interval_seconds: 10 },
       bot: { enabled: true, running: true, token_configured: true },
-      watched_repos_count: 2,
-      watched_repos: ['demo-org/demo-repo']
+      watched_repos_count: mockList.length,
+      watched_repos: [...new Set(mockList.map((w) => w.repo))]
     };
   }
 

@@ -117,13 +117,4 @@ export const MOCK_README_SUGGESTIONS = [
   }
 ];
 
-export const MOCK_INITIAL_WATCHES = [
-  {
-    id: 1,
-    repo: 'demo-org/demo-repo',
-    tags: ['good first issue', 'documentation'],
-    channel: 'telegram',
-    contact: '123456789',
-    created_at: new Date(Date.now() - 3600000 * 24).toISOString()
-  }
-];
+export const MOCK_INITIAL_WATCHES = [];

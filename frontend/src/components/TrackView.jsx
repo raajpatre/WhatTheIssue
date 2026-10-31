@@ -204,7 +204,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. demo-org/demo-repo"
+              placeholder="e.g. pallets/flask"
               value={repo}
               onChange={(e) => setRepo(e.target.value)}
               required

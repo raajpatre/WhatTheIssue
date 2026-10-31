@@ -21,7 +21,7 @@ export default function ErrorAlert({ error, onRetry }) {
 
     case 'INVALID_REPO':
       friendlyTitle = 'Invalid Repository Format';
-      friendlyDesc = 'Please enter a valid GitHub URL or slug in the format "owner/repo" (e.g., demo-org/demo-repo or pallets/flask).';
+      friendlyDesc = 'Please enter a valid GitHub URL or slug in the format "owner/repo" (e.g., pallets/flask or fastapi/fastapi).';
       icon = <ShieldAlert size={20} color="#f0a190" />;
       break;
 

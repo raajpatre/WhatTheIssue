@@ -3,9 +3,9 @@ import { Search, Plus, X } from 'lucide-react';
 
 const POPULAR_TAGS = ['good first issue', 'help wanted', 'beginner'];
 const EXAMPLE_REPOS = [
-  'demo-org/demo-repo',
   'pallets/flask',
-  'fastapi/fastapi'
+  'fastapi/fastapi',
+  'psf/requests'
 ];
 
 function StarSvg() {
@@ -108,7 +108,7 @@ export default function HomeHero({ onAnalyze, loading }) {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Paste GitHub repository URL or owner/name (e.g. demo-org/demo-repo)"
+                placeholder="Paste GitHub repository URL or owner/name (e.g. pallets/flask)"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 autoFocus
