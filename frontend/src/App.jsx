@@ -98,7 +98,7 @@ export default function App() {
         {/* Error notification if returned while searching */}
         {error && (
           <div style={{ maxWidth: '840px', margin: '0 auto 1.5rem' }}>
-            <ErrorAlert error={error} onRetry={() => error && handleAnalyze(currentRepo || 'demo-org/demo-repo', appliedTags)} />
+            <ErrorAlert error={error} onRetry={() => error && handleAnalyze(currentRepo || 'pallets/flask', appliedTags)} />
           </div>
         )}
 

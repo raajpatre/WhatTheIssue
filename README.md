@@ -91,24 +91,28 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r backend/requirements.txt
 
 # Create your local environment configuration
-cp env.example .env
+cp .env.example .env
 
 # Run FastAPI backend (runs on http://localhost:8000)
-uvicorn app.main:app --reload
+uvicorn app.main:app --app-dir backend --reload
 ```
 
-### 4. Running Backend Tests
+### 4. Taking the App Live (Production Deployment)
+
+For deploying the backend to Render/Railway and the frontend to Vercel/Netlify with persistent cloud PostgreSQL, follow the step-by-step [Live Deployment Guide](docs/DEPLOYMENT.md).
+
+### 5. Running Backend Tests
 ```bash
 pytest backend/tests/
 ```
 
-### 5. Running the Chrome Extension
+### 6. Running the Chrome Extension
 1. Open Google Chrome and navigate to `chrome://extensions/`.
 2. Enable **Developer mode** toggle in the top-right corner.
 3. Click **Load unpacked** and select the `extension/` directory.
 4. Browse to any GitHub repository to trigger the myOpenSource badge overlay.
 
-### 6. Telegram Bot Setup
+### 7. Telegram Bot Setup
 1. Message `@BotFather` on Telegram to create a bot and obtain a `TELEGRAM_BOT_TOKEN`.
 2. Set `TELEGRAM_BOT_TOKEN` in `.env`.
 3. Start the bot by setting `ENABLE_TELEGRAM_BOT=1`.

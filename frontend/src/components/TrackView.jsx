@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Send, Trash2, RefreshCw, CheckCircle2, MessageSquare, AlertCircle, ShieldAlert } from 'lucide-react';
-import { createWatch, listWatches, deleteWatch, checkNow } from '../api';
+import { Bell, Send, Trash2, RefreshCw, CheckCircle2, MessageSquare, AlertCircle, ShieldAlert, SendHorizonal } from 'lucide-react';
+import { createWatch, listWatches, deleteWatch, checkNow, testNotify } from '../api';
+
 
 const LOCAL_STORAGE_CONTACT_KEY = 'myopensource_telegram_contact';
 
@@ -12,7 +13,9 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
   const [loadingList, setLoadingList] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [checkingNow, setCheckingNow] = useState(false);
+  const [testingNotify, setTestingNotify] = useState(false);
   const [feedback, setFeedback] = useState(null);
+
 
   // Load remembered contact from localStorage on mount
   useEffect(() => {
@@ -144,6 +147,30 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
     }
   };
 
+  const handleTestNotify = async () => {
+    const cleanContact = contact.trim();
+    if (!cleanContact) {
+      setFeedback({ type: 'error', message: 'Enter your Telegram Chat ID first to test notifications.' });
+      return;
+    }
+    setTestingNotify(true);
+    setFeedback(null);
+    try {
+      const res = await testNotify(cleanContact);
+      if (res.ok) {
+        setFeedback({ type: 'success', message: 'Test alert sent! Check your Telegram messages.' });
+        if (onToast) onToast('Test alert sent to Telegram!');
+      } else {
+        setFeedback({ type: 'error', message: res.message || 'Failed to send alert. Check bot token and /start status.' });
+      }
+    } catch (err) {
+      setFeedback({ type: 'error', message: err.message || 'Failed to send test alert.' });
+    } finally {
+      setTestingNotify(false);
+    }
+  };
+
+
   // Helper to safely format chat ID without exposing full raw numbers
   const maskChatId = (idStr) => {
     if (!idStr) return '';
@@ -177,7 +204,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. demo-org/demo-repo"
+              placeholder="e.g. pallets/flask"
               value={repo}
               onChange={(e) => setRepo(e.target.value)}
               required
@@ -227,7 +254,19 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
               <Send size={15} />
               <span>{submitting ? 'Setting Watch...' : 'Start Watching'}</span>
             </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleTestNotify}
+              disabled={testingNotify || !contact.trim()}
+              title="Send a test notification to verify your Telegram Chat ID"
+              style={{ padding: '0.65rem 0.95rem' }}
+            >
+              <SendHorizonal size={14} className={testingNotify ? 'animate-spin' : ''} />
+              <span>{testingNotify ? 'Sending...' : 'Test Alert'}</span>
+            </button>
           </div>
+
 
           {/* Privacy Notice Required by PART-D specification */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem', marginTop: '1rem', color: 'var(--text-subtle)', fontSize: '0.75rem', lineHeight: 1.4 }}>

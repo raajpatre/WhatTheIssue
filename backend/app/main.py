@@ -11,7 +11,7 @@ from app.api.throttle import IPThrottleMiddleware
 from app.db.session import init_db
 from app.github.client import close_http_client
 from app.github.exceptions import RateLimitError, RepoNotFoundError, UpstreamError
-from app.watcher.service import start_scheduler
+from app.watcher.service import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
@@ -19,6 +19,7 @@ async def lifespan(_app: FastAPI):
     init_db()
     start_scheduler()
     yield
+    stop_scheduler()
     close_http_client()
 
 
