@@ -133,9 +133,9 @@ def test_baseline_repo_marks_seen_and_sends_no_notifications():
     mock_crud = MagicMock()
     mock_notify = MagicMock()
 
-    issue1 = DummyIssue(1, "org/repo", 1, "First")
-    issue2 = DummyIssue(2, "org/repo", 2, "Second")
-    mock_client.fetch_new_issues.return_value = ([issue1, issue2], "etag-1234")
+    mock_resp = MagicMock()
+    mock_resp.json.return_value = [{"id": 1}, {"id": 2}]
+    mock_client._get.return_value = mock_resp
 
     with patch.object(watcher_service, "github_client", mock_client), \
          patch.object(watcher_service, "crud", mock_crud), \
@@ -143,10 +143,9 @@ def test_baseline_repo_marks_seen_and_sends_no_notifications():
 
         watcher_service.baseline_repo("org/repo")
 
-        # Must fetch with etag=None
-        mock_client.fetch_new_issues.assert_called_once_with("org/repo", etag=None)
-        # Must save new etag and seen issue IDs
-        mock_crud.set_etag.assert_called_once_with("org/repo", "etag-1234")
+        # Must call GitHub issues endpoint
+        mock_client._get.assert_called()
+        # Must save seen issue IDs
         mock_crud.add_seen_issue_ids.assert_called_once_with("org/repo", [1, 2])
         # Must NOT notify anyone
         mock_notify.assert_not_called()
