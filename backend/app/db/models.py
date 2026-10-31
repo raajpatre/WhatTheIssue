@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, BigInteger, Text
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -26,7 +26,7 @@ class SeenIssueRow(Base):
     __tablename__ = "seen_issues"
 
     repo = Column(String, primary_key=True)
-    issue_id = Column(Integer, primary_key=True)
+    issue_id = Column(BigInteger, primary_key=True)
 
 
 class AIInsightRow(Base):

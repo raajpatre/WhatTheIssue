@@ -60,8 +60,7 @@ def _get_scored_issue(scored: Any) -> Any:
 
 def baseline_repo(repo: str) -> None:
     """
-    Establish an initial baseline for a repository.
-    Existing issues are marked as seen without sending notifications.
+    Mark all currently open issues as seen without sending notifications.
     """
     if not repo:
         return
@@ -69,29 +68,45 @@ def baseline_repo(repo: str) -> None:
     logger.info("Establishing initial baseline for %s...", repo)
 
     try:
-        issues, new_etag = github_client.fetch_new_issues(repo, etag=None)
+        owner, name = repo.split("/", 1)
+        issue_ids = []
 
-        if new_etag:
-            crud.set_etag(repo, new_etag)
+        for page in range(1, 11):
+            resp = github_client._get(
+                f"/repos/{owner}/{name}/issues",
+                params={
+                    "state": "open",
+                    "sort": "created",
+                    "direction": "desc",
+                    "per_page": 100,
+                    "page": page,
+                },
+            )
 
-        issue_ids = [
-            _get_issue_id(issue)
-            for issue in (issues or [])
-        ]
+            github_client._raise_for_github(resp)
+            batch = resp.json()
+
+            if not isinstance(batch, list):
+                raise ValueError("GitHub returned an invalid issues response")
+
+            for item in batch:
+                if isinstance(item, dict) and "pull_request" not in item:
+                    issue_ids.append(int(item["id"]))
+
+            if len(batch) < 100:
+                break
 
         if issue_ids:
             crud.add_seen_issue_ids(repo, issue_ids)
-            logger.info(
-                "Baselined %d existing issues for %s.",
-                len(issue_ids),
-                repo,
-            )
-        else:
-            logger.info("No existing issues found for %s.", repo)
+
+        logger.info(
+            "Baselined %d existing issues for %s.",
+            len(issue_ids),
+            repo,
+        )
 
     except Exception:
         logger.exception("Failed to baseline repository %s.", repo)
-
 
 def check_all_now() -> dict[str, int]:
     """
