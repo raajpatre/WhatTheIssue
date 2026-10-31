@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShieldCheck, BellRing, BookOpen, Plus, X } from 'lucide-react';
+import { Search, Plus, X } from 'lucide-react';
 
 const POPULAR_TAGS = ['good first issue', 'help wanted', 'beginner'];
 const EXAMPLE_REPOS = [
@@ -7,6 +7,32 @@ const EXAMPLE_REPOS = [
   'pallets/flask',
   'fastapi/fastapi'
 ];
+
+function StarSvg() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlSpace="preserve"
+      version="1.1"
+      viewBox="0 0 784.11 815.53"
+      style={{
+        shapeRendering: 'geometricPrecision',
+        textRendering: 'geometricPrecision',
+        imageRendering: 'optimizeQuality',
+        fillRule: 'evenodd',
+        clipRule: 'evenodd',
+      }}
+    >
+      <g id="Layer_x0020_1">
+        <path
+          className="fil0"
+          d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+        />
+      </g>
+    </svg>
+  );
+}
+
 
 export default function HomeHero({ onAnalyze, loading }) {
   const [url, setUrl] = useState('');
@@ -56,18 +82,25 @@ export default function HomeHero({ onAnalyze, loading }) {
 
   return (
     <div className="hero-section">
-      <h1 className="hero-title">
-        <span className="hero-title-gradient">Labels lie. Find issues that are </span>
-        <span className="hero-title-highlight">actually safe to start.</span>
-      </h1>
+      <div className="hero-atmosphere" aria-hidden="true">
+        <span className="ember ember-one" />
+        <span className="ember ember-two" />
+        <span className="ember ember-three" />
+      </div>
+      <div className="hero-layout">
+        <div className="hero-primary">
+          <h1 className="hero-title">
+            <span className="hero-title-gradient">Labels lie. Find issues that are </span>
+            <span className="hero-title-highlight">actually safe to start.</span>
+          </h1>
 
-      <p className="hero-subtitle">
-        Most &quot;good first issues&quot; are already claimed, abandoned, or require 10 hours of context.
-        We scan PRs, comments, and activity to give you verified starter tasks.
-      </p>
+          <p className="hero-subtitle">
+            Most &quot;good first issues&quot; are already claimed, abandoned, or require 10 hours of context.
+            We scan PRs, comments, and activity to give you verified starter tasks.
+          </p>
 
       {/* Search Input Box */}
-      <div className="search-card">
+          <div className="search-card">
         <form onSubmit={handleSubmit}>
           <div className="search-input-group">
             <div className="input-wrapper">
@@ -84,16 +117,21 @@ export default function HomeHero({ onAnalyze, loading }) {
             </div>
             <button
               type="submit"
-              className="btn btn-primary search-btn"
+              className="search-btn"
               disabled={loading || !url.trim()}
             >
-              {loading ? 'Analyzing...' : 'Analyze Repo'}
+              <span>{loading ? 'Analyzing...' : 'Analyze Repo'}</span>
+              <div className="star-1" aria-hidden="true"><StarSvg /></div>
+              <div className="star-2" aria-hidden="true"><StarSvg /></div>
+              <div className="star-3" aria-hidden="true"><StarSvg /></div>
+              <div className="star-4" aria-hidden="true"><StarSvg /></div>
+              <div className="star-5" aria-hidden="true"><StarSvg /></div>
+              <div className="star-6" aria-hidden="true"><StarSvg /></div>
             </button>
           </div>
 
           {/* Tag Chips */}
           <div className="tag-selection">
-            <span className="tag-label">Tags:</span>
             {POPULAR_TAGS.map((tag) => {
               const active = selectedTags.includes(tag);
               return (
@@ -160,42 +198,9 @@ export default function HomeHero({ onAnalyze, loading }) {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* How it works strip */}
-      <div className="how-it-works-grid">
-        <div className="step-card">
-          <div className="step-number">Step 01</div>
-          <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Search size={18} color="#3b82f6" />
-            <span>Paste Any Repo</span>
           </div>
-          <p className="step-desc">
-            Provide a GitHub URL. We fetch all open beginner issues and README instructions via read-only APIs.
-          </p>
         </div>
 
-        <div className="step-card">
-          <div className="step-number">Step 02</div>
-          <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ShieldCheck size={18} color="#10b981" />
-            <span>Heuristic Scoring</span>
-          </div>
-          <p className="step-desc">
-            We flag open PR collisions, assignee inactivity, and stale threads to sort safe issues from claimed traps.
-          </p>
-        </div>
-
-        <div className="step-card">
-          <div className="step-number">Step 03</div>
-          <div className="step-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <BellRing size={18} color="#8b5cf6" />
-            <span>AI Guide & Watcher</span>
-          </div>
-          <p className="step-desc">
-            AI explains what files to touch in plain English. Track the repo to get alerted on Telegram the moment a fresh issue drops.
-          </p>
-        </div>
       </div>
     </div>
   );

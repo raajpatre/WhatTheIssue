@@ -157,7 +157,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
       {/* Left Column: Create Watch Form */}
       <div className="track-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
-          <Bell size={22} color="#3b82f6" />
+          <Bell size={22} color="var(--ember)" />
           <h3>Track a Repository</h3>
         </div>
         <p className="track-card-desc">
@@ -211,7 +211,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
 
           <div className="bot-helper-box">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-              <MessageSquare size={14} color="#60a5fa" />
+              <MessageSquare size={14} color="var(--ember)" />
               <span>How to find your Telegram Chat ID</span>
             </div>
             <span>Open our Telegram bot, send <code>/start</code>, and paste the numeric ID here.</span>
@@ -231,7 +231,7 @@ export default function TrackView({ prefilledRepo = '', onToast }) {
 
           {/* Privacy Notice Required by PART-D specification */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem', marginTop: '1rem', color: 'var(--text-subtle)', fontSize: '0.75rem', lineHeight: 1.4 }}>
-            <ShieldAlert size={14} style={{ flexShrink: 0, marginTop: '2px', color: '#94a3b8' }} />
+            <ShieldAlert size={14} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--muted)' }} />
             <span>Demo app: no login. Anyone who knows your chat ID could see your tracked repos.</span>
           </div>
         </form>

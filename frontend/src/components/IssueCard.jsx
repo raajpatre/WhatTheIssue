@@ -97,7 +97,7 @@ export default function IssueCard({ scoredIssue, repo }) {
             style={{ width: `${Math.max(5, Math.min(100, score))}%` }}
           />
         </div>
-        <span className="score-val" style={{ color: score >= 70 ? '#34d399' : score >= 40 ? '#fbbf24' : '#f87171' }}>
+        <span className="score-val" style={{ color: score >= 70 ? '#9bd3ac' : score >= 40 ? '#f2bf72' : '#f0a190' }}>
           {score}/100
         </span>
       </div>
@@ -134,7 +134,7 @@ export default function IssueCard({ scoredIssue, repo }) {
           disabled={isExplaining}
           style={{ fontSize: '0.8125rem', padding: '0.4rem 0.85rem' }}
         >
-          <Sparkles size={14} color="#a855f7" />
+          <Sparkles size={14} color="var(--ember)" />
           <span>
             {isExplaining
               ? 'Consulting AI...'
@@ -146,7 +146,7 @@ export default function IssueCard({ scoredIssue, repo }) {
         </button>
 
         {issue.linked_pr_open && (
-          <span style={{ fontSize: '0.75rem', color: '#f87171', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <span style={{ fontSize: '0.75rem', color: '#f0a190', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <AlertTriangle size={12} /> Open PR detected
           </span>
         )}
