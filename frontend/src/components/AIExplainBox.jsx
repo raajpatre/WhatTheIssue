@@ -15,9 +15,9 @@ export default function AIExplainBox({ ai }) {
 
   // Rating color helper
   const getRatingColor = (rating) => {
-    if (rating >= 8) return '#10b981';
-    if (rating >= 5) return '#f59e0b';
-    return '#ef4444';
+    if (rating >= 8) return '#9bd3ac';
+    if (rating >= 5) return '#f2bf72';
+    return '#f0a190';
   };
 
   return (
@@ -82,7 +82,7 @@ export default function AIExplainBox({ ai }) {
       {first_steps && first_steps.length > 0 && (
         <div className="ai-first-steps">
           <h5 style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <CheckCircle2 size={13} color="#10b981" />
+            <CheckCircle2 size={13} color="var(--ember)" />
             <span>Recommended First Steps</span>
           </h5>
           <ol className="steps-list">

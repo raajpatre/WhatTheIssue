@@ -28,7 +28,7 @@ export default function ResultsHeader({ repo, issues = [], onTrackRepo, onRefres
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.25rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
             <span>
-              <strong style={{ color: '#10b981' }}>{safeCount}</strong> safe to start
+              <strong style={{ color: '#9bd3ac' }}>{safeCount}</strong> safe to start
             </span>
             <span>·</span>
             <span>{issues.length} total analyzed</span>
